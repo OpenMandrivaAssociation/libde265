@@ -39,10 +39,11 @@ Provides:	de265-devel = %{EVRD}
 The %{devname} package contains libraries and header files for
 developing applications that use %{name}.
 
-prep
+%prep
 %autosetup -p1
 
 %build
+./autogen.sh
 %configure
 %make_build
 
