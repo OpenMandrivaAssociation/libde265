@@ -43,7 +43,6 @@ prep
 %autosetup -p1
 
 %build
-./autogen.sh
 %configure
 %make_build
 
