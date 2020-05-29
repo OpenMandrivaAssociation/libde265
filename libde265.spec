@@ -4,7 +4,7 @@
 
 Summary:	Open h.265 video codec implementation
 Name:		libde265
-Version:	1.0.3
+Version:	1.0.5
 Release:	1
 Group:		System/Libraries
 License:	LGPLv2 and GPLv2
@@ -62,4 +62,3 @@ find %{buildroot} -name '*.*a' -delete
 %{_includedir}/%{name}/
 %{_libdir}/*%{name}*.so
 %{_libdir}/pkgconfig/libde265.pc
-
