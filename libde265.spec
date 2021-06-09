@@ -1,3 +1,5 @@
+%global optflags %{optflags} -O3
+
 %define major 0
 %define libname %mklibname de265_ %{major}
 %define devname %mklibname de265 -d
@@ -5,7 +7,7 @@
 Summary:	Open h.265 video codec implementation
 Name:		libde265
 Version:	1.0.8
-Release:	1
+Release:	2
 Group:		System/Libraries
 License:	LGPLv2 and GPLv2
 URL:		https://github.com/strukturag/libde265
@@ -52,13 +54,14 @@ developing applications that use %{name}.
 find %{buildroot} -name '*.*a' -delete
 
 %files
-%doc AUTHORS ChangeLog NEWS README.md
 %{_bindir}/*
 
 %files -n %{libname}
 %{_libdir}/*%{name}*.so.%{major}*
 
 %files -n %{devname}
-%{_includedir}/%{name}/
+%doc AUTHORS ChangeLog NEWS README.md
+%dir %{_includedir}/%{name}
+%{_includedir}/%{name}/*
 %{_libdir}/*%{name}*.so
 %{_libdir}/pkgconfig/libde265.pc
