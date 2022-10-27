@@ -6,12 +6,12 @@
 
 Summary:	Open h.265 video codec implementation
 Name:		libde265
-Version:	1.0.8
-Release:	2
+Version:	1.0.9
+Release:	1
 Group:		System/Libraries
 License:	LGPLv2 and GPLv2
 URL:		https://github.com/strukturag/libde265
-Source0:	https://github.com/strukturag/libde265/archive/master/%{name}-%{version}.tar.gz
+Source0:	https://github.com/strukturag/libde265/archive/%{version}/%{name}-%{version}.tar.gz
 BuildRequires:	pkgconfig(sdl)
 BuildRequires:	pkgconfig(x265)
 
