@@ -14,6 +14,8 @@ URL:		https://github.com/strukturag/libde265
 Source0:	https://github.com/strukturag/libde265/archive/%{version}/%{name}-%{version}.tar.gz
 BuildRequires:	pkgconfig(sdl2)
 BuildRequires:	pkgconfig(x265)
+BuildRequires:  pkgconfig(Qt5Core)
+BuildRequires:  pkgconfig(Qt5Widgets)
 BuildRequires:  ffmpeg-devel
 
 %description
