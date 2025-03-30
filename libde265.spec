@@ -8,16 +8,19 @@
 Summary:	Open h.265 video codec implementation
 Name:		libde265
 Version:	1.0.15
-Release:	3
+Release:	4
 Group:		System/Libraries
 License:	LGPLv2 and GPLv2
 URL:		https://github.com/strukturag/libde265
 Source0:	https://github.com/strukturag/libde265/archive/v%{version}/%{name}-%{version}.tar.gz
 BuildRequires:	pkgconfig(sdl2)
 BuildRequires:	pkgconfig(x265)
-BuildRequires:  pkgconfig(Qt5Core)
-BuildRequires:  pkgconfig(Qt5Widgets)
+BuildRequires:  pkgconfig(Qt6Core)
+BuildRequires:  pkgconfig(Qt6Widgets)
 BuildRequires:  ffmpeg-devel
+
+%patchlist
+libde265-qt6.patch
 
 %description
 libde265 is an open source implementation of the h.265 video codec. It is

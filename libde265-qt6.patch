@@ -1,0 +1,96 @@
+diff -up libde265-1.0.15/configure.ac.1~ libde265-1.0.15/configure.ac
+--- libde265-1.0.15/configure.ac.1~	2025-03-30 16:42:39.909991517 +0200
++++ libde265-1.0.15/configure.ac	2025-03-30 16:44:40.018605456 +0200
+@@ -341,13 +341,16 @@ if eval "test $enable_sherlock265 = yes"
+ fi
+ 
+ if eval "test $enable_sherlock265 = yes" ; then
++  PKG_CHECK_MODULES([QT], [Qt6Core Qt6Gui Qt6Widgets], [found_qt=6], [found_qt=no])
++  if eval "test $found_qt = no" ; then
+   PKG_CHECK_MODULES([QT], [Qt5Core Qt5Gui Qt5Widgets], [found_qt=5], [found_qt=no])
+   if eval "test $found_qt = no" ; then
+     PKG_CHECK_MODULES([QT], [QtCore QtGui], [found_qt=4])
+   fi
++  fi
+   AC_PATH_PROGS([QTCHOOSER],[qtchooser])
+   if eval "test x$QTCHOOSER = x" ; then
+-    AC_PATH_PROGS([QTMOC],[moc-qt$found_qt moc])
++    AC_PATH_PROGS([QTMOC],[moc-qt$found_qt moc], [], [/usr/lib64/qt$found_qt/libexec:/usr/lib/qt$found_qt/libexec:/usr/bin])
+     if eval "test x$QTMOC = x" ; then
+       AC_MSG_ERROR([Need the "moc" commandline tool which is required to generate the Qt files required for sherlock265.])
+     fi
+diff -up libde265-1.0.15/m4/ax_cxx_compile_stdcxx_11.m4.1~ libde265-1.0.15/m4/ax_cxx_compile_stdcxx_11.m4
+--- libde265-1.0.15/m4/ax_cxx_compile_stdcxx_11.m4.1~	2023-12-20 11:43:49.000000000 +0100
++++ libde265-1.0.15/m4/ax_cxx_compile_stdcxx_11.m4	2025-03-30 16:42:39.936125547 +0200
+@@ -105,7 +105,7 @@ AC_DEFUN([AX_CXX_COMPILE_STDCXX_11], [dn
+ 
+   m4_if([$1], [ext], [], [dnl
+   if test x$ac_success = xno; then
+-    for switch in -std=c++11 -std=c++0x; do
++    for switch in -std=c++20 -std=c++17 -std=c++14 -std=c++11 -std=c++0x; do
+       cachevar=AS_TR_SH([ax_cv_cxx_compile_cxx11_$switch])
+       AC_CACHE_CHECK(whether $CXX supports C++11 features with $switch,
+                      $cachevar,
+diff -up libde265-1.0.15/sherlock265/Makefile.am.1~ libde265-1.0.15/sherlock265/Makefile.am
+--- libde265-1.0.15/sherlock265/Makefile.am.1~	2025-03-30 16:42:39.925766273 +0200
++++ libde265-1.0.15/sherlock265/Makefile.am	2025-03-30 16:42:39.926594979 +0200
+@@ -4,7 +4,7 @@ bin_PROGRAMS = sherlock265
+ AM_CPPFLAGS = -I../libde265
+ 
+ sherlock265_DEPENDENCIES = ../libde265/libde265.la
+-sherlock265_CXXFLAGS = $(QT_CFLAGS) -std=c++0x -fPIC
++sherlock265_CXXFLAGS = $(QT_CFLAGS) -std=c++20 -fPIC
+ sherlock265_LDFLAGS = $(QT_LIBS)
+ sherlock265_LDADD = ../libde265/libde265.la -lstdc++ -lpthread
+ sherlock265_SOURCES = \
+diff -up libde265-1.0.15/sherlock265/VideoDecoder.cc.1~ libde265-1.0.15/sherlock265/VideoDecoder.cc
+--- libde265-1.0.15/sherlock265/VideoDecoder.cc.1~	2023-12-20 11:43:49.000000000 +0100
++++ libde265-1.0.15/sherlock265/VideoDecoder.cc	2025-03-30 16:42:28.858561816 +0200
+@@ -254,7 +254,7 @@ void VideoDecoder::convert_frame_swscale
+   }
+ 
+   uint8_t *qdata[1] = { (uint8_t *) qimg.bits() };
+-  int qstride[1] = { qimg.bytesPerLine() };
++  int qstride[1] = { static_cast<int>(qimg.bytesPerLine()) };
+   sws_scale(sws, data, stride, 0, img->get_height(), qdata, qstride);
+ }
+ #endif
+diff -up libde265-1.0.15/sherlock265/VideoWidget.cc.1~ libde265-1.0.15/sherlock265/VideoWidget.cc
+--- libde265-1.0.15/sherlock265/VideoWidget.cc.1~	2023-12-20 11:43:49.000000000 +0100
++++ libde265-1.0.15/sherlock265/VideoWidget.cc	2025-03-30 16:42:28.858622120 +0200
+@@ -35,7 +35,11 @@ VideoWidget::VideoWidget(QWidget *parent
+   setAttribute(Qt::WA_NoSystemBackground, true);
+ 
+   QPalette palette = this->palette();
++#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+   palette.setColor(QPalette::Background, Qt::black);
++#else
++  palette.setColor(QPalette::Window, Qt::black);
++#endif
+   setPalette(palette);
+ 
+   setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+@@ -68,7 +72,11 @@ void VideoWidget::paintEvent(QPaintEvent
+       QRegion region = event->region();
+       region = region.subtracted(videoRect);
+ 
++#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+       QBrush brush = palette().background();
++#else
++      QBrush brush = palette().window();
++#endif
+ 
+       foreach (const QRect &rect, region.rects()) {
+         painter.fillRect(rect, brush);
+@@ -77,7 +85,11 @@ void VideoWidget::paintEvent(QPaintEvent
+ 
+     painter.drawImage(videoRect, *mImg);
+   } else {
++#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+     painter.fillRect(event->rect(), palette().background());
++#else
++    painter.fillRect(event->rect(), palette().window());
++#endif
+   }
+ }
+ 
