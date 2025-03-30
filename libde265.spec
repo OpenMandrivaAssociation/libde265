@@ -1,17 +1,18 @@
 %global optflags %{optflags} -O3
 
 %define major 0
-%define libname %mklibname de265_ %{major}
+%define libname %mklibname de265
 %define devname %mklibname de265 -d
+%define oldlibname %mklibname de265_ 0
 
 Summary:	Open h.265 video codec implementation
 Name:		libde265
 Version:	1.0.15
-Release:	2
+Release:	3
 Group:		System/Libraries
 License:	LGPLv2 and GPLv2
 URL:		https://github.com/strukturag/libde265
-Source0:	https://github.com/strukturag/libde265/archive/%{version}/%{name}-%{version}.tar.gz
+Source0:	https://github.com/strukturag/libde265/archive/v%{version}/%{name}-%{version}.tar.gz
 BuildRequires:	pkgconfig(sdl2)
 BuildRequires:	pkgconfig(x265)
 BuildRequires:  pkgconfig(Qt5Core)
@@ -30,6 +31,7 @@ correctly decodes almost all conformance streams.
 %package -n %{libname}
 Summary:	Library files for %{name}
 Group:		System/Libraries
+%rename %{oldlibname}
 
 %description -n %{libname}
 The %{libname} package contains the libraries for %{name}.
