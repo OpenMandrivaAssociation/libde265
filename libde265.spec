@@ -25,7 +25,7 @@ BuildRequires:  pkgconfig(Qt6Widgets)
 BuildRequires:  ffmpeg-devel
 
 %patchlist
-libde265-qt6.patch
+#libde265-qt6.patch
 
 %description
 libde265 is an open source implementation of the h.265 video codec. It is
