@@ -17,7 +17,7 @@ BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool-base
 BuildRequires:	slibtool
-BuildRequires:	make
+BuildRequires:	make cmake
 BuildRequires:	pkgconfig(sdl2)
 BuildRequires:	pkgconfig(x265)
 BuildRequires:  pkgconfig(Qt6Core)
@@ -25,7 +25,7 @@ BuildRequires:  pkgconfig(Qt6Widgets)
 BuildRequires:  ffmpeg-devel
 
 %patchlist
-libde265-qt6.patch
+#libde265-qt6.patch
 
 %description
 libde265 is an open source implementation of the h.265 video codec. It is
@@ -58,12 +58,11 @@ developing applications that use %{name}.
 %autosetup -p1
 
 %build
-./autogen.sh
-%configure
+%cmake
 %make_build
 
 %install
-%make_install
+%make_install -C build
 find %{buildroot} -name '*.*a' -delete
 
 %files
@@ -78,3 +77,4 @@ find %{buildroot} -name '*.*a' -delete
 %{_includedir}/%{name}/*
 %{_libdir}/*%{name}*.so
 %{_libdir}/pkgconfig/libde265.pc
+%{_libdir}/cmake/libde265/
