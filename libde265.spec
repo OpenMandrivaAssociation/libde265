@@ -17,7 +17,7 @@ BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool-base
 BuildRequires:	slibtool
-BuildRequires:	make
+BuildRequires:	make cmake
 BuildRequires:	pkgconfig(sdl2)
 BuildRequires:	pkgconfig(x265)
 BuildRequires:  pkgconfig(Qt6Core)
@@ -58,12 +58,11 @@ developing applications that use %{name}.
 %autosetup -p1
 
 %build
-./autogen.sh
-%configure
+%cmake
 %make_build
 
 %install
-%make_install
+%make_install -C build
 find %{buildroot} -name '*.*a' -delete
 
 %files
