@@ -77,3 +77,4 @@ find %{buildroot} -name '*.*a' -delete
 %{_includedir}/%{name}/*
 %{_libdir}/*%{name}*.so
 %{_libdir}/pkgconfig/libde265.pc
+%{_libdir}/cmake/libde265/
